@@ -25,8 +25,8 @@ module PgQuery
               if statement.select_stmt.from_clause
                 # FROM subselects
                 statement.select_stmt.from_clause.each do |item|
-                  next unless item['RangeSubselect']
-                  statements << item['RangeSubselect']['subquery']
+                  next unless item['range_subselect']
+                  statements << item['range_subselect']['subquery']
                 end
 
                 # JOIN ON conditions
