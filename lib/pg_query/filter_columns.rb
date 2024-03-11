@@ -46,6 +46,9 @@ module PgQuery
               statements << PgQuery::Node.new(select_stmt: statement.select_stmt.larg) if statement.select_stmt.larg
               statements << PgQuery::Node.new(select_stmt: statement.select_stmt.rarg) if statement.select_stmt.rarg
             end
+          when :insert_stmt
+            value = statement.inner
+            statements << value.select_stmt if value.select_stmt
           when :update_stmt
             condition_items << statement.update_stmt.where_clause if statement.update_stmt.where_clause
           when :delete_stmt
