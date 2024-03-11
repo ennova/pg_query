@@ -29,6 +29,11 @@ describe PgQuery, '#filter_columns' do
     expect(filter_columns(query)).to match_array [['y', 'z']]
   end
 
+  it 'traverses into COPY (SELECT ...)' do
+    query = 'COPY (SELECT * FROM x WHERE x.y = 1) TO STDOUT'
+    expect(filter_columns(query)).to match_array [['x', 'y']]
+  end
+
   it 'recognizes boolean tests' do
     expect(filter_columns('SELECT * FROM x WHERE x.y IS TRUE AND x.z IS NOT FALSE')).to eq [['x', 'y'], ['x', 'z']]
   end
