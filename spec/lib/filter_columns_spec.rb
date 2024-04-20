@@ -19,6 +19,11 @@ describe PgQuery, '#filter_columns' do
     expect(filter_columns(query)).to match_array [['x', 'y'], ['x', 'z'], [nil, 'b']]
   end
 
+  it 'traverses into EXPLAIN' do
+    query = 'EXPLAIN SELECT * FROM x WHERE x.y = $1'
+    expect(filter_columns(query)).to match_array [['x', 'y']]
+  end
+
   it 'traverses into subselects' do
     query = 'SELECT * FROM (SELECT * FROM y WHERE y.z = 1) AS a'
     expect(filter_columns(query)).to match_array [['y', 'z']]
