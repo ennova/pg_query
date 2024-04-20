@@ -33,6 +33,14 @@ module PgQuery
                 condition_items += conditions_from_join_clauses(statement.select_stmt.from_clause)
               end
 
+              # SELECT subselects
+              if statement.select_stmt.target_list
+                statement.select_stmt.target_list.each do |item|
+                  next unless item&.[]('res_target')&.val&.[]('sub_link')&.[]('subselect')
+                  statements << item&.[]('res_target')&.val&.[]('sub_link')&.[]('subselect')
+                end
+              end
+
               # WHERE clause
               condition_items << statement.select_stmt.where_clause if statement.select_stmt.where_clause
 
