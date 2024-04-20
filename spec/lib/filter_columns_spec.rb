@@ -29,6 +29,11 @@ describe PgQuery, '#filter_columns' do
     expect(filter_columns(query)).to match_array [['y', 'z']]
   end
 
+  it 'traverses into expression subselects' do
+    query = 'SELECT (SELECT * FROM y WHERE y.z = 1) AS a'
+    expect(filter_columns(query)).to match_array [['y', 'z']]
+  end
+
   it 'traverses into INSERT ... SELECT' do
     query = 'INSERT INTO x SELECT * FROM y WHERE y.z = 1'
     expect(filter_columns(query)).to match_array [['y', 'z']]
